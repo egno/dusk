@@ -117,10 +117,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         click.state = restoreOnClick ? .on : .off
         menu.addItem(click)
 
-        let hw = item("Use Hardware Backlight When Possible", #selector(toggleBacklight))
+        let hw = item("Also Lower Hardware Backlight", #selector(toggleBacklight))
         hw.state = useBacklight ? .on : .off
         hw.isEnabled = backlight != nil
-        hw.toolTip = "Lowers the real backlight on built-in and Apple displays; other displays are dimmed via gamma."
+        hw.toolTip = "On top of gamma dimming, lowers the real backlight on displays that support it (built-in, Apple, LG UltraFine)."
         menu.addItem(hw)
 
         menu.addItem(item("Hotkey: \(shortcut.label)…", #selector(recordShortcut)))

@@ -23,7 +23,7 @@ final class FakeBackend: DimmingBackend {
 
 @MainActor
 struct DimControllerTests {
-    @Test func backendsSplitDisplaysInPriorityOrder() {
+    @Test func backendsStackOnDisplaysTheySupport() {
         let backlight = FakeBackend(supports: [1])
         let gamma = FakeBackend(supports: [1, 2, 3])
         let c = DimController(level: 0.25, displays: { [1, 2, 3] }, backends: { [backlight, gamma] })
@@ -32,7 +32,7 @@ struct DimControllerTests {
 
         #expect(c.isDimmed)
         #expect(backlight.dimmed == [1: 0.25])
-        #expect(gamma.dimmed == [2: 0.25, 3: 0.25])
+        #expect(gamma.dimmed == [1: 0.25, 2: 0.25, 3: 0.25])
     }
 
     @Test func toggleRestoresOnlyUsedBackends() {

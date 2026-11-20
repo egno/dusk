@@ -4,8 +4,9 @@ Menu bar app that dims every connected display on a hotkey, and restores them on
 
 - **Default hotkey:** ⌃⌥⌘D. To change it, choose **Hotkey…** in the menu.
 - **Dim To:** Black, 10%, 25% or 50% of the current brightness.
-- **Hardware backlight** (built-in and Apple displays) through the private DisplayServices framework. Other displays
-  are dimmed through their gamma tables, which macOS resets if Dusk quits or crashes.
+- Every display is dimmed through its gamma table, which macOS resets if Dusk quits or crashes. Displays that support
+  it (built-in, Apple, LG UltraFine) also get their real backlight lowered through the private DisplayServices
+  framework, since some backlights stay visibly lit even at 0.
 - Needs no Accessibility permission: the hotkey uses Carbon `RegisterEventHotKey`, and clicks are caught by an
   `NSEvent` global mouse monitor.
 

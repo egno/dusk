@@ -6,13 +6,14 @@ public typealias DisplayID = CGDirectDisplayID
 @MainActor
 public protocol DimmingBackend: AnyObject {
     /// Dims the displays this backend can handle to `level` (0...1) of their current brightness and remembers the
-    /// originals. Returns the displays it dimmed; the rest are offered to the next backend.
+    /// originals. Returns the displays it dimmed.
     func dim(_ displays: [DisplayID], to level: Double) -> Set<DisplayID>
     /// Puts every display dimmed since the last restore back to its remembered brightness.
     func restore()
 }
 
-/// Toggles between dimmed and normal, trying backends in priority order for each display.
+/// Toggles between dimmed and normal. Backends stack: each dims every display it can, so a display whose backlight
+/// can't go fully dark (e.g. an LG UltraFine at 0) is darkened further by gamma.
 @MainActor
 public final class DimController {
     public private(set) var isDimmed = false
@@ -36,13 +37,8 @@ public final class DimController {
 
     public func dim() {
         guard !isDimmed else { return }
-        var remaining = displays()
-        used = []
-        for backend in backends() where !remaining.isEmpty {
-            let handled = backend.dim(remaining, to: level)
-            if !handled.isEmpty { used.append(backend) }
-            remaining.removeAll { handled.contains($0) }
-        }
+        let all = displays()
+        used = backends().filter { !$0.dim(all, to: level).isEmpty }
         isDimmed = true
         onChange?(true)
     }

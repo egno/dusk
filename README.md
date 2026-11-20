@@ -15,3 +15,7 @@ make test      # unit tests
 make app       # build/Dusk.app
 make install   # copy to /Applications and launch
 ```
+
+## License
+
+MIT, see [LICENSE](LICENSE).
